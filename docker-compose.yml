@@ -1,0 +1,13 @@
+version: '2'
+services:
+ coffee-service:
+   build:
+     context: .
+   working_dir: /usr/src/
+   environment:
+     - AWS_ACCESS_KEY_ID
+     - AWS_SECRET_ACCESS_KEY
+     - AWS_DEFAULT_REGION
+     - URL
+     - USERNAME
+     - PASSWORD

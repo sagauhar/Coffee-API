@@ -1,0 +1,100 @@
+service: coffee-service
+
+plugins:
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: java8
+  memorySize: 256
+  timeout: 30
+  endpointType: REGIONAL
+  apiKeys:
+    - coffee-api-key-${opt:stage}
+  stage: ${opt:stage, "dev"}
+  region: ${opt:region, "ap-southeast-2"}
+
+package:
+  artifact: ./target/coffee-api-1.0-lambda_deployment_package_assembly.zip
+
+functions:
+  getCoffees:
+    handler: au.com.finder.api.coffee.endpoint.CoffeeListEndpoint::handleRequest
+    name: coffee-api-get-coffee-${self:provider.stage}
+    description: This lambda gets invoked by API Gateway and returns list of coffees
+    environment:
+      URL: ${env:URL}
+      USERNAME: ${env:USERNAME}
+      PASSWORD: ${env:PASSWORD}
+    tags:
+      app: coffee-api
+      env: ${self:provider.stage}
+    events:
+      - http:
+          path: coffee
+          method: get
+          private: true
+  getCoffeeById:
+    handler: au.com.finder.api.coffee.endpoint.CoffeeEndpoint::handleRequest
+    name: coffee-api-get-coffee-by-id-${self:provider.stage}
+    description: This lambda gets invoked by API Gateway and returns coffee by id
+    environment:
+      URL: ${env:URL}
+      USERNAME: ${env:USERNAME}
+      PASSWORD: ${env:PASSWORD}
+    tags:
+      app: coffee-api
+      env: ${self:provider.stage}
+    events:
+      - http:
+          path: coffee/{id+}
+          method: get
+          private: true
+  getOrders:
+    handler: au.com.finder.api.coffee.endpoint.OrderListEndpoint::handleRequest
+    name: coffee-api-get-order-${self:provider.stage}
+    description: This lambda gets invoked by API Gateway and returns list of orders
+    environment:
+      URL: ${env:URL}
+      USERNAME: ${env:USERNAME}
+      PASSWORD: ${env:PASSWORD}
+    tags:
+      app: coffee-api
+      env: ${self:provider.stage}
+    events:
+      - http:
+          path: order
+          method: get
+          private: true
+  getOrderById:
+    handler: au.com.finder.api.coffee.endpoint.OrderEndpoint::handleRequest
+    name: coffee-api-get-order-by-id-${self:provider.stage}
+    description: This lambda gets invoked by API Gateway and returns order by id
+    environment:
+      URL: ${env:URL}
+      USERNAME: ${env:USERNAME}
+      PASSWORD: ${env:PASSWORD}
+    tags:
+      app: coffee-api
+      env: ${self:provider.stage}
+    events:
+      - http:
+          path: order/{id+}
+          method: get
+          private: true
+  saveOrder:
+    handler: au.com.finder.api.coffee.endpoint.SaveOrderEndpoint::handleRequest
+    name: coffee-api-save-order-${self:provider.stage}
+    description: This lambda gets invoked by API Gateway and saves order
+    environment:
+      URL: ${env:URL}
+      USERNAME: ${env:USERNAME}
+      PASSWORD: ${env:PASSWORD}
+    tags:
+      app: coffee-api
+      env: ${self:provider.stage}
+    events:
+      - http:
+          path: order
+          method: post
+          private: true
