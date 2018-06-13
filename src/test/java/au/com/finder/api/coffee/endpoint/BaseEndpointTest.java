@@ -4,6 +4,7 @@ import au.com.finder.api.coffee.dataaccess.DataAccess;
 import au.com.finder.api.coffee.dataaccess.MySQLDataAccessMock;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
+import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -30,7 +31,9 @@ public class BaseEndpointTest {
         @Override
         protected void before() throws Throwable {
             super.before();
-            database = DB.newEmbeddedDB(3306);
+            database = DB.newEmbeddedDB(DBConfigurationBuilder.newBuilder()
+                    .setPort(3306)
+                    .addArg("--user=root").build());
             database.start();
             database.createDB("finderdb");
         }

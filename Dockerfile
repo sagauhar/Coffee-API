@@ -5,7 +5,7 @@ ARG URL
 ARG USERNAME
 ARG PASSWORD
 ARG SCHEMA
-RUN mvn clean package -DskipTests=true
+RUN mvn clean package
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 RUN npm install serverless
